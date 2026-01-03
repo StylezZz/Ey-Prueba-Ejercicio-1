@@ -1,0 +1,341 @@
+{
+	"info": {
+		"_postman_id": "58096112-202a-4bb8-9c33-c1615997ba14",
+		"name": "Ey - Ejercicio 1",
+		"description": "Colección de API's para el Ejercicio de la prueba técnica de EY.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37093087"
+	},
+	"item": [
+		{
+			"name": "Error Cases",
+			"item": [
+				{
+					"name": "No API KEY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/rate-limit",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rate-limit"
+							]
+						},
+						"description": "Uso de un endpoint sin utilizar un API KEY. (Status Code: 401)\n\nRespuesta siguiente:\n\n``` json\n{\n    \"error\": \"API Key is required. Please provide a valid API key in the X-API-Key header.\",\n    \"detail\": \"API Key is required. Please provide a valid API key in the X-API-Key header.\",\n    \"timestamp\": \"2026-01-03T00:47:30.744124\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/v1/rate-limit",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"rate-limit"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "date",
+									"value": "Sat, 03 Jan 2026 05:47:29 GMT"
+								},
+								{
+									"key": "server",
+									"value": "uvicorn"
+								},
+								{
+									"key": "www-authenticate",
+									"value": "ApiKey"
+								},
+								{
+									"key": "content-length",
+									"value": "217"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"API Key is required. Please provide a valid API key in the X-API-Key header.\",\n    \"detail\": \"API Key is required. Please provide a valid API key in the X-API-Key header.\",\n    \"timestamp\": \"2026-01-03T00:47:30.744124\"\n}"
+						}
+					]
+				},
+				{
+					"name": "API KEY Inválida",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "testttt",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/rate-limit",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rate-limit"
+							]
+						},
+						"description": "Uso de un endpoint utilizando una API KEY inválida. (Status Code: 403)\n\nRespuesta siguiente:\n\n``` json\n{\n    \"error\": \"Invalid API Key. Please check your credentials.\",\n    \"detail\": \"Invalid API Key. Please check your credentials.\",\n    \"timestamp\": \"2026-01-03T00:51:12.577919\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Rate Limit Exceeded",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Probar con el Run de la Collection. En mi caso lo probe con el de World Bank por tiempos. Ajustar delay a 0ms y iteraciones 25 o más de 20. (Status Code: 429 - Too Many Requests)\n\nRespuesta siguiente:\n\n``` json\n{\n    \"error\": \"Rate limit exceeded\",\n    \"detail\": \"Maximum 20 requests per 60 seconds allowed\",\n    \"timestamp\": \"2026-01-03T00:55:46.156689\"\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "Una serie de request en las que observaremos distintos comportamientos de los endpoints."
+		},
+		{
+			"name": "Health",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/health",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Este endpoint solo sirve para revisar una conexión con el backend."
+			},
+			"response": []
+		},
+		{
+			"name": "Search All Sources",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "demo-api-key-12345",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entity_name\": \"Miami\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/search/all",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"search",
+						"all"
+					]
+				},
+				"description": "Endpoint para el scrapping de las 3 sources, mediante el uso de un campo \"entity_name\". (Búsqueda completa)."
+			},
+			"response": []
+		},
+		{
+			"name": "Scrapping Ofac",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "demo-api-key-12345",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entity_name\": \"Miami\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/search/ofac",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"search",
+						"ofac"
+					]
+				},
+				"description": "Endpoint para poder buscar la entidad en la fuente de OFAC. (Prueba individual)."
+			},
+			"response": []
+		},
+		{
+			"name": "Scrapping Offshorelake",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "demo-api-key-12345",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entity_name\":\"Miami\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/search/offshore-leaks",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"search",
+						"offshore-leaks"
+					]
+				},
+				"description": "Endpoint para poder buscar la entidad en la fuente de Offshorelake. (Prueba individual)"
+			},
+			"response": []
+		},
+		{
+			"name": "Scrapping World Bank",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "demo-api-key-12345",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entity_name\":\"Argentina\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/v1/search/world-bank",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"search",
+						"world-bank"
+					]
+				},
+				"description": "Endpoint para poder buscar la entidad en la fuente de World Bank. (Prueba Individual)."
+			},
+			"response": []
+		},
+		{
+			"name": "Rate Limit",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		}
+	]
+}
